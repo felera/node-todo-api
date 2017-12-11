@@ -7,7 +7,7 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp',(err,db)=>{
         return;
     }
 
-    //shut down the mongodb service after you see this message
+    //shut down thhe mongodb service after you see this message
     console.log('Connected to Mongo DB Server');
 
     // setTimeout(()=>{ 
