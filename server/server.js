@@ -27,8 +27,7 @@ app.get('/todos', (req, res)=>{
             todos
         });
     }).catch((err)=>{
-        res.status(400)
-        .send('Unable to fetch todos.\n', err);
+        res.status(400).send('Unable to fetch todos.\n', err);
     });
 });
 
