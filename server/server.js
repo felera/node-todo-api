@@ -9,16 +9,14 @@ var app = express();
 app.use(bodyParser.json());
 
 app.post('/todos', (req, res)=>{
-    console.log('POST /todos', new Date());
+    //console.log('POST /todos', new Date());
     var todo = new Todo({
         text:req.body.text
     });
     
-    todo.save()
-    .then((doc)=>{
+    todo.save().then((doc)=>{
         res.send(doc);
-    })
-    .catch((err)=>{
+    }).catch((err)=>{
         res.status(400).send(`Unable to create Todo\n ${err}`);
     });
 })
@@ -27,3 +25,5 @@ app.post('/todos', (req, res)=>{
 app.listen(3000,()=>{
     console.log('Express server listening on port 3000');
 })
+
+module.exports = app;
