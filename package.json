@@ -9,7 +9,7 @@
     "testmon":"nodemon --exec \"npm test\""
   },
   "engines":{
-    "node":"9.1.1"
+    "node":"6.11.1"
   },
   "author": "",
   "license": "ISC",
