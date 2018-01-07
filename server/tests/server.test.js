@@ -1,19 +1,56 @@
 const expect = require('expect');
 const request = require('supertest');
+const {ObjectID} = require('mongodb');
 
-var app = require('../server');
-var Todo = require('../models/todo');
-var todos = [{text:'first todo'},{text:'second todo'}];
+const app = require('../server');
+const {Todo} = require('../models/todo');
 
-beforeEach((done)=>{
-    Todo.remove({}).then(()=>{
-        Todo.insertMany(todos).then(()=>{
-            done();
-        });
+const todos = [{
+    _id:new ObjectID(),
+    text:'first todo'
+},{
+    _id:new ObjectID(),
+    text:'second todo'
+}];
+
+beforeEach((done) => {
+    Todo.remove({})
+    .then(() => {
+        return Todo.insertMany(todos);
+    })
+    .then(() => done());
+  });
+
+ 
+  describe('GET /todos/:id',() => {
+    it('Should return a specific todo', (done) => {
+        request(app)
+            .get(`/todos/${todos[0]._id.toHexString()}`)
+            .expect(200)
+            .expect((res)=>{
+                expect(res.body.todo.text).toBe(todos[0].text);
+            })
+            .end(done);
     });
-});
 
-describe('POST /Todos', ()=>{
+    it('Should retutn 404 if todo not found',(done)=>{
+        var newId = new ObjectID().toHexString();
+        request(app)
+            .get(`/todos/${newId}`)
+            .expect(404)
+            .end(done);
+    });
+
+    it('Should return 404 if invalid ObjectID', (done)=>{
+        request(app)
+            .get('/todos/123')
+            .expect(404)
+            .end(done);
+    });
+
+}); 
+
+describe('POST /todos', ()=>{
 
     it('Should create a new Todo', (done)=>{
         var text = 'Este es mi todo de prueba';
@@ -61,14 +98,15 @@ describe('POST /Todos', ()=>{
 });
 
 
+
 describe('GET /todos', ()=>{
     it('Should return all todos', (done)=>{
         request(app)
-        .get('/todos')
-        .expect(200)
-        .expect((res)=>{
-            expect(res.body.toods.length).toBe(2);
-        })
-        .end(done());
+            .get('/todos')
+            .expect(200)
+            .expect((res)=>{
+                expect(res.body.toods.length).toBe(2);
+            })
+            .end(done());
     });
-})
+});
