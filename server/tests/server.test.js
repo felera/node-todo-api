@@ -153,3 +153,42 @@ describe('DELETE /todos/:id', () => {
         .end(done);
     });
 });
+
+
+describe('PATCH /todos/:id', ()=>{
+
+    it('should update the todo',(done) => {
+        var id = todos[1]._id.toHexString();
+        var newText = 'at sbux!';
+        var myTodo = {completed:true, text:newText};
+
+        request(app)
+            .patch(`/todos/${id}`)
+            .send(myTodo)
+            .expect(200)
+            .expect(res => {
+                upTodo = res.body.todo;
+                expect(upTodo.text).toBe(newText);
+                expect(upTodo.completed).toBeTruthy();
+                expect(typeof upTodo.completedAt).toBe('number');
+            }).end(done);
+    });
+
+    it('should clear completedAt when todo is not completed', (done)=>{
+        var id = todos[0]._id.toHexString();
+        var newText = 'imcompleted task!';
+        var myTodo = {completed:false, text:newText};
+
+        request(app)
+            .patch(`/todos/${id}`)
+            .send(myTodo)
+            .expect(200)
+            .expect(res => {
+                upTodo = res.body.todo;
+                expect(upTodo.text).toBe(newText);
+                expect(upTodo.completed).toBeFalsy();
+                expect(upTodo.completedAt).toBeNull();
+            }).end(done);
+    });
+
+})
