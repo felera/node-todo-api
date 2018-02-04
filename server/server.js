@@ -1,10 +1,12 @@
+require('./config/config');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const {ObjectID} = require('mongodb');
 const _ = require('lodash');
 var cors = require('cors')
 
-const mongoose = require('./db/mongoose');
+const {mongoose} = require('./db/mongoose');
 const {User} = require('./models/user');
 const {Todo} = require('./models/todo');
 
